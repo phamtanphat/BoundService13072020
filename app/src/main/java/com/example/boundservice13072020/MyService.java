@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -25,10 +26,11 @@ public class MyService extends Service {
     int count = 0;
     Context mContext;
     NotificationManager mNotificationManager;
+    OnListenData onListenData;
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        return null;
+        return new MyBinder();
     }
 
     @Override
@@ -54,6 +56,8 @@ public class MyService extends Service {
                     count++;
                     mNotificationManager.notify(1,createNotification(CHANNEL_ID,mContext,"Running : " + count));
                 }
+                onListenData.getData(count);
+
             }
         },1000);
         return START_STICKY;
@@ -84,5 +88,15 @@ public class MyService extends Service {
             mNotificationManager.createNotificationChannel(notificationChannel);
         }
         return builder.build();
+    }
+
+    class MyBinder extends Binder{
+        MyService getService() {
+            return MyService.this;
+        }
+    }
+
+    public void getDataNotification(OnListenData onListenData){
+        this.onListenData = onListenData;
     }
 }
