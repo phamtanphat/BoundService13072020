@@ -38,14 +38,13 @@ public class MyService extends Service {
         super.onCreate();
         mContext = this;
         mNotification = createNotification(CHANNEL_ID,mContext,"Ban co thong bao moi");
-        startForeground(1,mNotification);
         mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         handler = new Handler();
-
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        startForeground(1,mNotification);
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
